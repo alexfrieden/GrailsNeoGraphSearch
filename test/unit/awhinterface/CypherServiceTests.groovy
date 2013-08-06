@@ -16,7 +16,7 @@ class CypherServiceTests {
     void testquery() {
 //        fail "Implement me"
         def cypherService = new CypherService()
-        String myjson = cypherService.query("START n=node(170) RETURN n","http://localhost:7474/db/data/cypher")
+        String myjson = cypherService.postquery("START n=node(170) RETURN n","http://localhost:7474/db/data/cypher")
 //        println(myjson)
         def slurper = new JsonSlurper()
 //        def result = slurper.parseText('{"person":{"name":"Guillaume","age":33,"pets":["dog","cat"]}}')

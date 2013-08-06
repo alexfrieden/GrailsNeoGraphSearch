@@ -20,7 +20,7 @@ class CypherService {
 
 
 
-    def query(String statement, Myparams, String restLocation) {
+    def postquery(String statement, Myparams, String restLocation) {
         def rest = new RestBuilder( )
         def resp = rest.post( restLocation ) {
             headers.'X-Stream' = 'true'
@@ -29,7 +29,7 @@ class CypherService {
         return resp.json;
 
     }
-    def query(String statement, String restLocation) {
+    def postquery(String statement, String restLocation) {
         def rest = new RestBuilder( )
         def resp = rest.post( restLocation ) {
             headers.'X-Stream' = 'true'
