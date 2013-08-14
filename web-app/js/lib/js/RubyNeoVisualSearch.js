@@ -1,8 +1,8 @@
 var visualSearch;
 
 $(document).ready(function() {
-    var facets=[];           //initial search here
-    $.ajax("Search/facets", {
+    var facets=[];
+    $.ajax("/facets", {
         type:"GET",
         dataType:"json",
         success:function (res) {
@@ -41,10 +41,9 @@ $(document).ready(function() {
 
 
             },
-            facetMatches : function(callback)
-            {
+            facetMatches : function(callback) {
                 if(visualSearch.searchBox.value() != "") {
-                    $.ajax("Search/connectedFacets", {
+                    $.ajax("/connected_facets", {
                         type:"POST",
                         dataType:"json",
                         data: {facets : visualSearch.searchQuery.facets() }, //.slice(-1)[0]
@@ -57,11 +56,9 @@ $(document).ready(function() {
                     callback(facets);
                 }
             },
-            valueMatches : function(facet, searchTerm, callback)
-            {
-
+            valueMatches : function(facet, searchTerm, callback) {
                 if(visualSearch.searchBox.value() != "") {
-                    $.ajax("Search/connectedValues/" + facet + "/" + searchTerm, {
+                    $.ajax("/connected_values/" + facet + "~" + searchTerm, {
                         type:"POST",
                         dataType:"json",
                         data: {facets: visualSearch.searchQuery.facets() }, //.slice(-1)[0]
@@ -70,7 +67,7 @@ $(document).ready(function() {
                         }
                     });
                 } else {
-                    $.ajax("Search/values/" + facet + "/" + searchTerm, {
+                    $.ajax("/values/" + facet + "/" + searchTerm, {
                         type:"GET",
                         dataType:"json",
                         success:function (res) {
