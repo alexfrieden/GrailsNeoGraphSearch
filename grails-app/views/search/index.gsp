@@ -51,9 +51,26 @@
 
 
 
-<g:form method="post">
-    <g:remoteLink value="test" controller="Search" action="HttpTest">test facets</g:remoteLink>
-</g:form>
+
+    <script type="text/javascript" charset="utf-8">
+        function exportList() {
+
+            jQuery.ajax({
+                url: "Search/download",
+                type: "Get",
+                data: {facets: visualSearch.searchQuery.facets()}
+            });
+        }
+
+        function myFunction()
+        {
+            alert("I am an alert box!");
+        }
+    </script>
+<input type="button" onclick="myFunction()" value="Show alert box">
+<input type="button" onclick="exportList()" value="Download">
+    %{--<g:remoteLink value="test" controller="Search" action="HttpTest" params=${search_box_container.searchBox.value()}>test facets</g:remoteLink>--}%
+
 
 </body>
 </html>

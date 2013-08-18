@@ -195,9 +195,37 @@ class SearchController {
 
     }
 
-    def test()
+    def download()
     {
-        println("Moo cow")
+        def stuff = params
+        Pattern pattern = Pattern.compile("\\[(.*?)\\]");
+        HashMap<Integer,Map<String,Object>> facetMap = new HashMap<Integer,Map<String,Object>>()
+        stuff.each { myParam ->
+
+            if(myParam.toString().startsWith("facets"))
+            {
+                def thing = myParam
+                if (!thing.value.toString().endsWith("]"))
+                {
+                    Matcher matcher = pattern.matcher(thing.key.toString());
+                    List<String> parsedKeys = new ArrayList<String>()
+                    while(matcher.find()){
+                        parsedKeys.add(matcher.group(1))
+                    }
+                    java.util.Map.Entry<String,Object> pair1=new java.util.AbstractMap.SimpleEntry<String,Object>(parsedKeys[1],thing.value.toString());
+                    facetMap.put(parsedKeys[0].toInteger(),pair1)
+                }
+            }
+        }
+        String deleteme
+
+        //loop through facet map
+        HashMap<Integer, String> myLabels = new HashMap<Integer, String>()
+        for(Integer myKey : facetMap)
+        {
+            myLabels.put(myKey,facetMap.key)
+
+        }
     }
 
 }

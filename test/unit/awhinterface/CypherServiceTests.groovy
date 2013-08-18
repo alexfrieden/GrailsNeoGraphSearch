@@ -125,5 +125,39 @@ class CypherServiceTests {
         println(test.data[0])
     }
 
+    void testFullCypherQuery()
+    {
+        HashMap<Integer, String> myLabels = new HashMap<Integer, String>()
+        myLabels.put(0,"Patient")
+        myLabels.put(1,"Sample")
+        def stuff = CypherService.getDataFromMap(myLabels)
+        Integer counter = 0
+        def columns = stuff.columns
+        def data = stuff.data
+        StringBuilder title = new StringBuilder()
+        stuff.each {
+            title.append("${columns[counter]}")
+            counter++
+        }
+        counter=0
+        println(title.toString())
+        stuff.each {
+//            String columnNames = it.columns.toString().split(',')
+//            println("${columnNames[counter]}, ${it.data.data}")
+
+//            println(data[counter].data)
+            StringBuilder line = new StringBuilder()
+            data[counter].data.each
+            {
+               String value = it.toString().substring(1,it.toString().size()-1)
+               line.append("${value}\t")
+            }
+            line.delete(line.size()-1,line.size())
+            println(line)
+
+            counter++
+        }
+    }
+
 
 }

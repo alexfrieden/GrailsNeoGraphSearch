@@ -273,6 +273,31 @@ class CypherService {
         return CypherString.toString()
     }
 
+    static def getDataFromMap(HashMap<Integer,String> labelMap)
+    {
+        StringBuilder query = new StringBuilder()
+        StringBuilder MATCH = new StringBuilder("MATCH ")
+        StringBuilder RETURN = new StringBuilder("RETURN ")
+        for(Integer key : labelMap.keySet())
+        {
+            MATCH.append("(node${key}:${labelMap[key]})--")
+            RETURN.append("node${key},")
+        }
+        MATCH.delete(MATCH.size()-2,MATCH.size())
+        RETURN.delete(RETURN.size()-1,RETURN.size())
+        RETURN.append(";")
+
+//        String myjson = CypherService.postquery(cypher,cypherRest)
+        query.append(MATCH)
+        query.append(" ")
+        query.append(RETURN)
+//        return query.toString()
+        String myjson = CypherService.postquery(query.toString(),cypherRest)
+        def result = slurper.parseText(myjson)
+        return result;
+
+    }
+
     @Deprecated
     static Integer getIDFromFacet(String propertyName, Object value)
     {
