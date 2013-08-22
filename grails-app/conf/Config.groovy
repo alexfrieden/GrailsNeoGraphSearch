@@ -62,17 +62,19 @@ grails.hibernate.cache.queries = false
 environments {
     test {
         grails.logging.jul.usebridge = true
-        cypherRest = "http://localhost:7474/db/data/cypher"
+//        cypherRest = "http://localhost:7474/db/data/cypher"
+        cypherRest = "http://GsgNeo.sb01.stations.graphenedb.com:24789/db/data/cypher"
     }
 
     development {
         grails.logging.jul.usebridge = true
-        cypherRest = "http://localhost:7474/db/data/cypher"
+//        cypherRest = "http://localhost:7474/db/data/cypher"
+        cypherRest = "http://GsgNeo.sb01.stations.graphenedb.com:24789/db/data/cypher"
     }
     production {
         grails.logging.jul.usebridge = false
         // TODO: grails.serverURL = "http://www.changeme.com"
-        cypherRest = "http://localhost:7474/db/data/cypher"
+        cypherRest = "http://GsgNeo.sb01.stations.graphenedb.com:24789/db/data/cypher"
     }
 }
 

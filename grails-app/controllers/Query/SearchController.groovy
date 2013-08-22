@@ -24,7 +24,7 @@ class SearchController {
 
     def connectedFacets()
     {
-        println("CONNECTED FACETS")
+//        println("CONNECTED FACETS")
         HashMap<Integer, Tuple> facetMap = new HashMap<Integer, Tuple>()    //id, name, value
         def stuff = params
 //        String food
@@ -48,6 +48,7 @@ class SearchController {
         }
 
         String query = CypherService.getConnectedFacets(facetMap)
+//        println(query)
         JSONArray jsonArray = new JSONArray()
         List<String> myLabels = cypherService.getLabels(query)
         myLabels.each
@@ -69,7 +70,7 @@ class SearchController {
 
     def connectedValues()
     {
-        println("CONNECTED VALUES")
+//        println("CONNECTED VALUES")
         HashMap<Integer, Tuple> facetMap = new HashMap<Integer, Tuple>()    //id, name, value
         def stuff = params
         String food
@@ -114,7 +115,7 @@ class SearchController {
             }
         }
         String query = CypherService.getConnectedValues(facetMap)
-        println(query)
+//        println(query)
         def myvalues = CypherService.getValuesFromQuery(query)
         JSONArray jsonArray = new JSONArray()
         myvalues.data[0].each { value ->
@@ -122,19 +123,18 @@ class SearchController {
             jsonObject.put("label",value.value)
             jsonObject.put("value",value.value)
             jsonArray.add(jsonObject)
-            println(jsonObject)
+//            println(jsonObject)
         }
 
-        println(jsonArray)
+//        println(jsonArray)
         render jsonArray as JSON
 
     }
 
     def facets()
     {
-        String cypherRest = ConfigurationHolder.getConfig().getProperty('cypherRest')
         JSONArray jsonArray = new JSONArray()
-        List<String> myLabels = cypherService.getLabels()
+        List<String> myLabels = CypherService.getLabels()
         myLabels.each
         { label->
             def myproperties = CypherService.getProperties(label)
@@ -167,8 +167,8 @@ class SearchController {
             jsonObject.put("value",value)
             jsonArray.add(jsonObject)
         }
-
-        //println(jsonObject)
+//        println("GET MA VALUES")
+//        println(jsonArray)
         render jsonArray as JSON
 
     }
@@ -182,7 +182,7 @@ class SearchController {
 //        println(result)
         JSON mydata = result.data["data"]
 //        println(result.data["data"])
-        println(mydata)
+//        println(mydata)
         redirect(controller: "Search", action: "index")
     }
 
@@ -198,34 +198,82 @@ class SearchController {
     def download()
     {
         def stuff = params
-        Pattern pattern = Pattern.compile("\\[(.*?)\\]");
-        HashMap<Integer,Map<String,Object>> facetMap = new HashMap<Integer,Map<String,Object>>()
-        stuff.each { myParam ->
 
+        File file = File.createTempFile("temp",".txt")
+        BufferedWriter out = new BufferedWriter(new FileWriter(file))
+        HashMap<Integer, String> myLabels = new HashMap<Integer, String>()
+        Integer count = 0
+        stuff.each { myParam->
             if(myParam.toString().startsWith("facets"))
             {
-                def thing = myParam
-                if (!thing.value.toString().endsWith("]"))
-                {
-                    Matcher matcher = pattern.matcher(thing.key.toString());
-                    List<String> parsedKeys = new ArrayList<String>()
-                    while(matcher.find()){
-                        parsedKeys.add(matcher.group(1))
-                    }
-                    java.util.Map.Entry<String,Object> pair1=new java.util.AbstractMap.SimpleEntry<String,Object>(parsedKeys[1],thing.value.toString());
-                    facetMap.put(parsedKeys[0].toInteger(),pair1)
+                String[] facets = myParam.value.toString().split(";")
+                facets.each { facet->
+                    String[] parsedFacets = facet.split(':')
+                    String[] keys = parsedFacets[0].split('\\.')
+                    String label = keys[0]
+                    myLabels.put(count,label)
+                    count++
                 }
             }
         }
-        String deleteme
-
-        //loop through facet map
-        HashMap<Integer, String> myLabels = new HashMap<Integer, String>()
-        for(Integer myKey : facetMap)
+        def queryResults = CypherService.getDataFromMap(myLabels)
+        Integer counter = 0
+        def columns = queryResults.columns
+        def data = queryResults.data
+        StringBuilder title = new StringBuilder()
+        queryResults.each
         {
-            myLabels.put(myKey,facetMap.key)
-
+            title.append("${columns[counter]}\t")
+            counter++
         }
+        println(title.toString())
+        out.writeLine("${title.toString()}")
+        counter = 0
+        queryResults.each
+        {
+            StringBuilder line = new StringBuilder()
+            data[counter].data.each
+                    {
+                        String value = it.toString().substring(1,it.toString().size()-1)
+                        line.append("${value}\t")
+                    }
+            line.delete(line.size()-1,line.size())
+            println(line.toString())
+            out.writeLine("${line.toString()}")
+            counter++
+        }
+        out.flush()
+        response.setHeader "Content-disposition", "attachment; filename=testalex.txt"
+        response.contentType = 'text-plain'
+        response.outputStream << file.text
+        response.outputStream.flush()
+    }
+
+    def test()
+    {
+        def stuff = params
+        stuff.each { myParam->
+            if(myParam.toString().startsWith("facets"))
+            {
+                String[] facets = myParam.value.toString().split(";")
+                facets.each { facet->
+//                    println(facet)
+                    String[] parsedFacets = facet.split(':')
+                    String[] keys = parsedFacets[0].split('\\.')
+                    String label = keys[0]
+                    println(label)
+                }
+            }
+        }
+//        String facets = stuff[0]
+//        println(facets)
+//        File file = File.createTempFile("temp",".txt")
+//        file.write("hello world!")
+//        response.setHeader "Content-disposition", "attachment; filename=${file.name}.txt"
+//        response.contentType = 'text-plain'
+//        response.outputStream << file.text
+//        response.outputStream.flush()
+//        redirect(controller: "Search", action: "index")
     }
 
 }

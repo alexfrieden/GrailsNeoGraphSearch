@@ -22,7 +22,7 @@ class CypherServiceTests {
     void testquery() {
         def cypherService = new CypherService()
         String cypherRest = ConfigurationHolder.getConfig().getProperty('cypherRest')
-        String myjson = cypherService.postquery("START n=node(170) RETURN id(n)",cypherRest)
+        String myjson = cypherService.postquery("START n=node(9) RETURN id(n)",cypherRest)
         def slurper = new JsonSlurper()
 
 
@@ -76,19 +76,30 @@ class CypherServiceTests {
 
     void testGetValues()
     {
-        def mvalues = CypherService.getValues("VcfRecord", "Contig")
+        def mvalues = CypherService.getValues("VcfRecord", "Position")
         mvalues.each{
             println(it)
 
         }
     }
     void testSplit() {
-        String unparsed = "[thing.1][thin2g]";
-        Pattern pattern = Pattern.compile("\\[(.*?)\\]");
-        Matcher matcher = pattern.matcher(unparsed);
-        while(matcher.find()){
-            System.out.println(matcher.group(1));
+//        String unparsed = "[thing.1][thin2g]";
+//        Pattern pattern = Pattern.compile("\\[(.*?)\\]");
+//        Matcher matcher = pattern.matcher(unparsed);
+//        while(matcher.find()){
+//            System.out.println(matcher.group(1));
+//        }
+        String unparsed = "Sample.name: \"PAT1 UDN1\" Patient.name: 5"
+//        println(unparsed)
+        String[] split = unparsed.split(":")
+        split.each { line->
+            def items = line.split("(.)([A-Z])")
+            items.each{
+                println(it)
+            }
+
         }
+
     }
 
     void testConnectedFacetTraversal()
@@ -99,7 +110,7 @@ class CypherServiceTests {
 //        List of keys: 0 0
 //        List of keys: 1 Sample.name
         HashMap<Integer, java.util.Map.Entry<String,Object>> facetMap = new HashMap<Integer,java.util.Map.Entry<String,Object>>()
-        java.util.Map.Entry<String,Object> pair1=new java.util.AbstractMap.SimpleEntry<String,Object>("Sample.name","PAT1-UDN1");
+        java.util.Map.Entry<String,Object> pair1=new java.util.AbstractMap.SimpleEntry<String,Object>("VcfRecord.Position",6368306);
 //        pair.fst("Sample.name")
 //        pair.snd("PAT1-UDN1")
         facetMap.put(0,pair1)
@@ -136,11 +147,11 @@ class CypherServiceTests {
         def data = stuff.data
         StringBuilder title = new StringBuilder()
         stuff.each {
-            title.append("${columns[counter]}")
+            title.append("${columns[counter]}\t")
             counter++
         }
         counter=0
-        println(title.toString())
+        println("${title.toString()}")
         stuff.each {
 //            String columnNames = it.columns.toString().split(',')
 //            println("${columnNames[counter]}, ${it.data.data}")

@@ -30,6 +30,7 @@ class CypherService {
         def resp = rest.post( restLocation ) {
             headers.'X-Stream' = 'true'
             body(new JsonBuilder( query: statement ,params: Myparams).toString())
+            auth("GsgNeo", "HjdfDcfaUHJ828aZOjcg")
         }
         return resp.json;
 
@@ -39,57 +40,58 @@ class CypherService {
         def resp = rest.post( restLocation ) {
             headers.'X-Stream' = 'true'
             query = statement
+            auth("GsgNeo", "HjdfDcfaUHJ828aZOjcg")
         }
         return resp.json;
 
     }
 
 
-    static def postText(String baseUrl, String path, query, method = Method.POST) {
-        try {
-            def ret = null
-            def http = new HTTPBuilder(baseUrl)
+//    static def postText(String baseUrl, String path, query, method = Method.POST) {
+//        try {
+//            def ret = null
+//            def http = new HTTPBuilder(baseUrl)
+//
+//            // perform a POST request, expecting TEXT response
+//            http.request(method, ContentType.TEXT) {
+//                uri.path = path
+//                uri.query = query
+//                headers.'X-Stream' = true
+//
+//                // response handler for a success response code
+//                response.success = { resp, reader ->
+//                    println "response status: ${resp.statusLine}"
+//                    println 'Headers: -----------'
+//                    resp.headers.each { h ->
+//                        println " ${h.name} : ${h.value}"
+//                    }
+//
+//                    ret = reader.getText()
+//
+//                    println 'Response data: -----'
+//                    println ret
+//                    println '--------------------'
+//                }
+//            }
+//            return ret
+//
+//        } catch (groovyx.net.http.HttpResponseException ex) {
+//            ex.printStackTrace()
+//            return null
+//        } catch (java.net.ConnectException ex) {
+//            ex.printStackTrace()
+//            return null
+//        }
+//    }
 
-            // perform a POST request, expecting TEXT response
-            http.request(method, ContentType.TEXT) {
-                uri.path = path
-                uri.query = query
-                headers.'X-Stream' = true
-
-                // response handler for a success response code
-                response.success = { resp, reader ->
-                    println "response status: ${resp.statusLine}"
-                    println 'Headers: -----------'
-                    resp.headers.each { h ->
-                        println " ${h.name} : ${h.value}"
-                    }
-
-                    ret = reader.getText()
-
-                    println 'Response data: -----'
-                    println ret
-                    println '--------------------'
-                }
-            }
-            return ret
-
-        } catch (groovyx.net.http.HttpResponseException ex) {
-            ex.printStackTrace()
-            return null
-        } catch (java.net.ConnectException ex) {
-            ex.printStackTrace()
-            return null
-        }
-    }
-
-    static def getQuery(String restLocation)
-    {
-        def rest = new RestBuilder()
-        def resp = rest.get(restLocation){
-
-        }
-        return resp.json;
-    }
+//    static def getQuery(String restLocation)
+//    {
+//        def rest = new RestBuilder()
+//        def resp = rest.get(restLocation){
+//
+//        }
+//        return resp.json;
+//    }
 
     static List<String> getLabels()
     {
@@ -154,13 +156,8 @@ class CypherService {
 
     static def getConnectedFacets(HashMap<Integer,Map<String,Object>> facetMap)
     {
-        Integer total = facetMap.size()
-        Integer count = 0
         StringBuilder CypherString = new StringBuilder()
-        Integer startingID = null
         java.util.Map.Entry<String,Object> pair = facetMap[0]
-        startingID = CypherService.getIDFromFacet(pair.key,pair.value)
-//        CypherString.append("START n0=node(${startingID}) ")
         List<Object> filterValues = new ArrayList<Object>()
         List<String> traversalFilters = new ArrayList<String>()
         List<String> traversalProperties = new ArrayList<String>()

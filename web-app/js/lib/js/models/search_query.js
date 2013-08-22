@@ -11,7 +11,7 @@ VS.model.SearchQuery = Backbone.Collection.extend({
   
   // Turns all of the facets into a single serialized string.
   serialize : function() {
-    return this.map(function(facet){ return facet.serialize(); }).join(' ');
+    return this.map(function(facet){ return facet.serialize(); }).join(';');
   },
   
   facets : function() {

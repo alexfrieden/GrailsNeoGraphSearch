@@ -44,6 +44,7 @@ $(document).ready(function() {
             facetMatches : function(callback)
             {
                 if(visualSearch.searchBox.value() != "") {
+//                    console.log(visualSearch.searchBox.value())
                     $.ajax("Search/connectedFacets", {
                         type:"POST",
                         dataType:"json",

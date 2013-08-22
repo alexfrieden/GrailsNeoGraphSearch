@@ -1,8 +1,3 @@
-<!--
-  To change this template, choose Tools | Templates
-  and open the template in the editor.
--->
-
 <html>
 <head>
 
@@ -53,23 +48,20 @@
 
 
     <script type="text/javascript" charset="utf-8">
-        function exportList() {
+        $(function() {
+            $('a[name="searchLink"]').bind('click', function() {
 
-            jQuery.ajax({
-                url: "Search/download",
-                type: "Get",
-                data: {facets: visualSearch.searchQuery.facets()}
-            });
-        }
+                $(this).attr('href', $(this).attr('href') + '?facets=' + visualSearch.searchQuery.serialize()  );
+            })
+        })
 
-        function myFunction()
-        {
-            alert("I am an alert box!");
-        }
+
+
     </script>
-<input type="button" onclick="myFunction()" value="Show alert box">
-<input type="button" onclick="exportList()" value="Download">
-    %{--<g:remoteLink value="test" controller="Search" action="HttpTest" params=${search_box_container.searchBox.value()}>test facets</g:remoteLink>--}%
+
+%{--<a href="http://localhost:8080/Search/test" name="searchLink">TEST GRAILS NOT GRAILS LINK</a><br/>--}%
+<g:link controller="Search" action="download" name="searchLink" id="searchLink">TEST GRAILS</g:link>
+
 
 
 </body>
