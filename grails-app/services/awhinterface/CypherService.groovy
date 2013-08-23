@@ -261,8 +261,10 @@ class CypherService {
                 WHERE.append("node${j}.${traversalProperties[j]}? = '${filterValues[j]}' AND ")
             }
         }
+        String returnedProperty = traversalProperties[traversalProperties.size()-1]
         WHERE.delete(WHERE.size() - 4,WHERE.size())
-        String RETURN = "RETURN LAST(p)"
+        // RETURN LAST(EXTRACT(n in NODES(p) : n.Lower?)) AS value;
+        String RETURN = "RETURN LAST(EXTRACT(n in NODES(p) : n.${returnedProperty}?)) AS value"
         CypherString.append(MATCH.toString())
         CypherString.append(WHERE.toString())
         CypherString.append(RETURN)

@@ -76,7 +76,7 @@ class CypherServiceTests {
 
     void testGetValues()
     {
-        def mvalues = CypherService.getValues("VcfRecord", "Position")
+        def mvalues = CypherService.getValues("Allele", "Lower")
         mvalues.each{
             println(it)
 
@@ -121,7 +121,7 @@ class CypherServiceTests {
     {
         HashMap<Integer, java.util.Map.Entry<String,Object>> facetMap = new HashMap<Integer,java.util.Map.Entry<String,Object>>()
         java.util.Map.Entry<String,Object> pair1=new java.util.AbstractMap.SimpleEntry<String,Object>("Sample.name","PAT1-UDN1");
-        java.util.Map.Entry<String,Object> pair2=new java.util.AbstractMap.SimpleEntry<String,Object>("Patient.name","");
+        java.util.Map.Entry<String,Object> pair2=new java.util.AbstractMap.SimpleEntry<String,Object>("Allele.Lower",116963804);
         facetMap.put(0,pair1)
         facetMap.put(1,pair2)
 

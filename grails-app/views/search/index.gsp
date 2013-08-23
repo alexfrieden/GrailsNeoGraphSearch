@@ -60,7 +60,7 @@
     </script>
 
 %{--<a href="http://localhost:8080/Search/test" name="searchLink">TEST GRAILS NOT GRAILS LINK</a><br/>--}%
-<g:link controller="Search" action="download" name="searchLink" id="searchLink">TEST GRAILS</g:link>
+<g:link controller="Search" action="download" name="searchLink" id="searchLink">Download File</g:link>
 
 
 
